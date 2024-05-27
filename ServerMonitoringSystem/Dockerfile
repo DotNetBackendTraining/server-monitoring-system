@@ -22,6 +22,3 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "ServerMonitoringSystem.dll"]
-
-# Set or override environment variables
-ENV ServerStatisticsSettings__ServerIdentifier=docker

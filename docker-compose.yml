@@ -1,0 +1,9 @@
+﻿services:
+  server-monitoring-system:
+    image: server-monitoring-system
+    build:
+      context: ./ServerMonitoringSystem
+      dockerfile: Dockerfile
+    environment:
+      ServerStatisticsSettings__SamplingIntervalSeconds: 60
+      ServerStatisticsSettings__ServerIdentifier: server1
