@@ -1,3 +1,14 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using Microsoft.Extensions.Configuration;
 
-Console.WriteLine("Hello, World!");
+var builder = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .AddEnvironmentVariables();
+
+var configuration = builder.Build();
+var serverStatisticsConfig = configuration.GetSection("ServerStatisticsSettings");
+
+var samplingIntervalSeconds = serverStatisticsConfig["SamplingIntervalSeconds"];
+var serverIdentifier = serverStatisticsConfig["ServerIdentifier"];
+
+Console.WriteLine($"Sampling Interval: {samplingIntervalSeconds} seconds");
+Console.WriteLine($"Server Identifier: {serverIdentifier}");
