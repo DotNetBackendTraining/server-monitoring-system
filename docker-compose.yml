@@ -1,9 +1,23 @@
 ﻿services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
   server-monitoring-system:
     image: server-monitoring-system
     build:
       context: ./ServerMonitoringSystem
       dockerfile: Dockerfile
+    depends_on:
+      - rabbitmq
     environment:
       ServerStatisticsSettings__SamplingIntervalSeconds: 60
       ServerStatisticsSettings__ServerIdentifier: server1
+      RabbitMq__Hostname: rabbitmq
+      RabbitMq__Username: guest
+      RabbitMq__Password: guest
