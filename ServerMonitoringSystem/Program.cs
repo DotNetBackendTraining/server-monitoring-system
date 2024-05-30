@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using ServerMonitoringSystem.Services;
 
 var builder = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
@@ -7,8 +8,22 @@ var builder = new ConfigurationBuilder()
 var configuration = builder.Build();
 var serverStatisticsConfig = configuration.GetSection("ServerStatisticsSettings");
 
-var samplingIntervalSeconds = serverStatisticsConfig["SamplingIntervalSeconds"];
-var serverIdentifier = serverStatisticsConfig["ServerIdentifier"];
+var samplingIntervalSeconds = double.Parse(
+    serverStatisticsConfig["SamplingIntervalSeconds"]
+    ?? throw new IOException("SamplingIntervalSeconds not defined"));
+
+var cpuUsageSamplingMilliSeconds = int.Parse(
+    serverStatisticsConfig["CpuUsageSamplingMilliSeconds"]
+    ?? throw new IOException("CpuUsageSamplingMilliSeconds not defined"));
+
+var serverIdentifier =
+    serverStatisticsConfig["ServerIdentifier"]
+    ?? throw new IOException("ServerIdentifier not defined");
 
 Console.WriteLine($"Sampling Interval: {samplingIntervalSeconds} seconds");
 Console.WriteLine($"Server Identifier: {serverIdentifier}");
+
+var generator = new ServerStatisticsGenerator(cpuUsageSamplingMilliSeconds);
+var clock = new ClockService(TimeSpan.FromSeconds(samplingIntervalSeconds),
+    async () => Console.WriteLine(await generator.GenerateStatisticsAsync()));
+await clock.StartAsync(CancellationToken.None);
