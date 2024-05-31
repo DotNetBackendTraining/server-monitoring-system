@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using ServerMonitoringSystem.Interfaces;
 using ServerMonitoringSystem.Services;
 
@@ -7,12 +8,26 @@ namespace ServerMonitoringSystem.Configuration;
 
 public static class ServicesConfigurationExtension
 {
-    public static void InjectServerServices(
+    public static void InjectConfigurationServices(
         this IServiceCollection services,
-        IConfigurationSection serverStatisticsConfiguration)
+        IConfiguration configuration)
     {
-        var cpuUsageSamplingMilliSeconds = int.Parse(serverStatisticsConfiguration["CpuUsageSamplingMilliSeconds"]!);
-        var samplingIntervalSeconds = double.Parse(serverStatisticsConfiguration["SamplingIntervalSeconds"]!);
+        services.Configure<ServerStatisticsSettings>(configuration.GetSection("ServerStatisticsSettings"));
+    }
+
+    public static void InjectServerServices(this IServiceCollection services)
+    {
+        services.AddScoped<IServerStatisticsGenerator, ServerStatisticsGenerator>(p =>
+        {
+            var settings = p.GetRequiredService<IOptions<ServerStatisticsSettings>>().Value;
+            return new ServerStatisticsGenerator(settings.CpuUsageSamplingMilliSeconds);
+        });
+        services.AddScoped<IClockService>(p =>
+        {
+            var settings = p.GetRequiredService<IOptions<ServerStatisticsSettings>>().Value;
+            return new ClockService(TimeSpan.FromSeconds(settings.SamplingIntervalSeconds));
+        });
+    }
 
         services.AddScoped<IServerStatisticsGenerator, ServerStatisticsGenerator>(_ =>
             new ServerStatisticsGenerator(cpuUsageSamplingMilliSeconds));

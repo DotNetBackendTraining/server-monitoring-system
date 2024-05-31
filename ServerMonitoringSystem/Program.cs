@@ -9,7 +9,8 @@ var configuration = new ConfigurationBuilder()
     .Build();
 
 var services = new ServiceCollection();
-services.InjectServerServices(configuration.GetSection("ServerStatisticsSettings"));
+services.InjectConfigurationServices(configuration);
+services.InjectServerServices();
 var provider = services.BuildServiceProvider();
 
 var generator = provider.GetRequiredService<IServerStatisticsGenerator>();
