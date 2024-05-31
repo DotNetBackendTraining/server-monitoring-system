@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ServerMonitoringSystem.Collector.Configuration;
 using ServerMonitoringSystem.Collector.Interfaces;
+using ServerMonitoringSystem.Common.Interfaces;
 
 var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")

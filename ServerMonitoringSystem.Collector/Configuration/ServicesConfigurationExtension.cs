@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using ServerMonitoringSystem.Collector.Interfaces;
 using ServerMonitoringSystem.Collector.Services;
+using ServerMonitoringSystem.Common.Interfaces;
 
 namespace ServerMonitoringSystem.Collector.Configuration;
 

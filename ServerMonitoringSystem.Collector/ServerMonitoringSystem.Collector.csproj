@@ -28,4 +28,8 @@
       </None>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\ServerMonitoringSystem.Common\ServerMonitoringSystem.Common.csproj" />
+    </ItemGroup>
+
 </Project>

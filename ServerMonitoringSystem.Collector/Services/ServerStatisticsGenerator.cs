@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using ServerMonitoringSystem.Collector.Interfaces;
-using ServerMonitoringSystem.Collector.Models;
+using ServerMonitoringSystem.Common.Models;
 
 namespace ServerMonitoringSystem.Collector.Services;
 

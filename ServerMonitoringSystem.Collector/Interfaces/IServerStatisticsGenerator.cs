@@ -1,4 +1,4 @@
-using ServerMonitoringSystem.Collector.Models;
+using ServerMonitoringSystem.Common.Models;
 
 namespace ServerMonitoringSystem.Collector.Interfaces;
 
