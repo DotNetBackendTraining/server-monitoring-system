@@ -5,8 +5,10 @@
       - "5672:5672"
       - "15672:15672"
     environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_USER: ${RabbitMq__Username}
+      RABBITMQ_DEFAULT_PASS: ${RabbitMq__Password}
+    env_file:
+      - .env
 
   server-monitoring-system:
     image: server-monitoring-system
@@ -16,8 +18,10 @@
     depends_on:
       - rabbitmq
     environment:
-      ServerStatisticsSettings__SamplingIntervalSeconds: 60
-      ServerStatisticsSettings__ServerIdentifier: server1
-      RabbitMq__Hostname: rabbitmq
-      RabbitMq__Username: guest
-      RabbitMq__Password: guest
+      - ServerStatisticsSettings__SamplingIntervalSeconds=${ServerStatisticsSettings__SamplingIntervalSeconds}
+      - ServerStatisticsSettings__ServerIdentifier=${ServerStatisticsSettings__ServerIdentifier}
+      - RabbitMq__Hostname=${RabbitMq__Hostname}
+      - RabbitMq__Username=${RabbitMq__Username}
+      - RabbitMq__Password=${RabbitMq__Password}
+    env_file:
+      - .env

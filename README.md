@@ -1,12 +1,28 @@
 # **Building a Server Monitoring and Notification System**
 
-## **Task 1: Server Statistics Collection Service**
+## Setup
 
-- **Objective:** Develop a C# process that collects and publishes server statistics, specifically memory usage, available memory, and CPU usage.
+- Before running:
+    1. (Optional) Change values of the environment variables in `example.env`.
+    2. (Optional) Override `appsettings.json` variables in `example.env`.
+    3. Rename `example.env` to `.env`.
+
+- How to run:
+    1. Simply run docker compose.
+
+## Main Tasks
+
+### **Task 1: Server Statistics Collection Service**
+
+- **Objective:** Develop a C# process that collects and publishes server statistics, specifically memory usage,
+  available memory, and CPU usage.
 - **Requirements:**
-    - Collect server statistics (memory usage, available memory, and CPU usage) at regular intervals, specified by a configurable period `SamplingIntervalSeconds`, using the `System.Diagnostics` namespace.
-    - Encapsulate the collected statistics (memory usage, available memory, CPU usage, and timestamp) into a statistics object.
-    - Publish the statistics object to a message queue under the topic `ServerStatistics.<ServerIdentifier>`, where `<ServerIdentifier>` is a configurable option.
+    - Collect server statistics (memory usage, available memory, and CPU usage) at regular intervals, specified by a
+      configurable period `SamplingIntervalSeconds`, using the `System.Diagnostics` namespace.
+    - Encapsulate the collected statistics (memory usage, available memory, CPU usage, and timestamp) into a statistics
+      object.
+    - Publish the statistics object to a message queue under the topic `ServerStatistics.<ServerIdentifier>`,
+      where `<ServerIdentifier>` is a configurable option.
     - Implement an abstraction for message queuing to ensure the code is not tightly coupled to RabbitMQ.
 
 ![server-monitoring-1.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/ddf5996a-820b-4471-852d-f26ee54b7580/6d44aa6e-38ed-45bd-99b0-810492533906/server-monitoring-1.png)
@@ -29,33 +45,39 @@ public class ServerStatistics
 ```json
 // Configuration options in appsettings.json
 {
-    "ServerStatisticsConfig": {
-        "SamplingIntervalSeconds": 60,
-        "ServerIdentifier": "linux1"
-    }
+  "ServerStatisticsConfig": {
+    "SamplingIntervalSeconds": 60,
+    "ServerIdentifier": "linux1"
+  }
 }
 ```
 
-## **Task 2: Message Processing and Anomaly Detection Service**
+### **Task 2: Message Processing and Anomaly Detection Service**
 
-- **Objective:** Develop a C# process that receives server statistics from the message queue, persists the data to a MongoDB instance, and sends alerts if anomalies or high usage is detected.
+- **Objective:** Develop a C# process that receives server statistics from the message queue, persists the data to a
+  MongoDB instance, and sends alerts if anomalies or high usage is detected.
 - **Requirements:**
-    - Receive messages from the message queue with the topic `ServerStatistics.*` and deserialize them into objects containing memory usage, available memory, CPU usage, server's identifier, and timestamp.
+    - Receive messages from the message queue with the topic `ServerStatistics.*` and deserialize them into objects
+      containing memory usage, available memory, CPU usage, server's identifier, and timestamp.
     - Persist the deserialized data to a MongoDB instance.
     - Implement anomaly detection logic based on configurable threshold percentages specified in `appsettings.json`.
     - Send an "Anomaly Alert" via SignalR if a sudden increase (anomaly) in memory usage or CPU usage is detected.
-    - Send a "High Usage Alert" via SignalR if the calculated memory usage percentage or CPU usage exceeds the specified "Usage Threshold".
-    - Implement abstractions for MongoDB and message queuing to ensure the code is not tightly coupled to specific implementations.
+    - Send a "High Usage Alert" via SignalR if the calculated memory usage percentage or CPU usage exceeds the
+      specified "Usage Threshold".
+    - Implement abstractions for MongoDB and message queuing to ensure the code is not tightly coupled to specific
+      implementations.
 
 ![server-monitoring-2.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/ddf5996a-820b-4471-852d-f26ee54b7580/b5ddafb4-f00c-4658-ad69-a7ec076de95b/server-monitoring-2.png)
 
 **Equations for Alert Calculation:**
 
 - For Anomaly Alert:
-    - Memory Usage Anomaly Alert: `if (CurrentMemoryUsage > (PreviousMemoryUsage * (1 + MemoryUsageAnomalyThresholdPercentage)))`
+    - Memory Usage Anomaly
+      Alert: `if (CurrentMemoryUsage > (PreviousMemoryUsage * (1 + MemoryUsageAnomalyThresholdPercentage)))`
     - CPU Usage Anomaly Alert: `if (CurrentCpuUsage > (PreviousCpuUsage * (1 + CpuUsageAnomalyThresholdPercentage)))`
 - For High Usage Alert:
-    - Memory High Usage Alert: `if ((CurrentMemoryUsage / (CurrentMemoryUsage + CurrentAvailableMemory)) > MemoryUsageThresholdPercentage)`
+    - Memory High Usage
+      Alert: `if ((CurrentMemoryUsage / (CurrentMemoryUsage + CurrentAvailableMemory)) > MemoryUsageThresholdPercentage)`
     - CPU High Usage Alert: `if (CurrentCpuUsage > CpuUsageThresholdPercentage)`
 
 **Code Snippet: Server Statistics Data Type (Class Definition)**
@@ -89,7 +111,7 @@ public class ServerStatistics
 }
 ```
 
-## **Task 3: SignalR Event Consumer Service**
+### **Task 3: SignalR Event Consumer Service**
 
 - **Objective:** Develop a C# process that connects to a SignalR hub and prints received events to the console.
 - **Requirements:**
@@ -103,9 +125,9 @@ public class ServerStatistics
 ```json
 // Configuration options in appsettings.json
 {
-    "SignalRConfig": {
-        "SignalRUrl": "<http://your-signalr-hub-url>"
-    }
+  "SignalRConfig": {
+    "SignalRUrl": "<http://your-signalr-hub-url>"
+  }
 }
 ```
 
@@ -113,7 +135,8 @@ public class ServerStatistics
 
 ### **Optional Task 4: Create a Reusable RabbitMQ Client Library**
 
-- **Objective:** Develop a reusable class library for interacting with RabbitMQ, thereby abstracting the RabbitMQ client and making it easier to switch to a different message queuing system in the future.
+- **Objective:** Develop a reusable class library for interacting with RabbitMQ, thereby abstracting the RabbitMQ client
+  and making it easier to switch to a different message queuing system in the future.
 - **Requirements:**
     - Implement a class for publishing messages to a RabbitMQ exchange.
     - Implement a class for consuming messages from a RabbitMQ queue.
@@ -124,7 +147,8 @@ public class ServerStatistics
 - **Objective:** Dockerize the services to enable containerized deployments.
 - **Requirements:**
     - Modify the services to accept configuration options through environment variables instead of `appsettings.json`.
-    - Ensure that all components (Server Statistics Collection Service, Message Processing and Anomaly Detection Service, and SignalR Event Consumer Service) are running and integrated correctly within Docker containers.
+    - Ensure that all components (Server Statistics Collection Service, Message Processing and Anomaly Detection
+      Service, and SignalR Event Consumer Service) are running and integrated correctly within Docker containers.
 
 ### **Optional Task 6: Docker Compose Integration**
 
@@ -135,6 +159,8 @@ public class ServerStatistics
 
 ![server-monitoring-4.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/ddf5996a-820b-4471-852d-f26ee54b7580/b83963c9-aa80-40c1-9182-cd2646367b0d/server-monitoring-4.png)
 
-***Note:** It’s possible to create multiple versions of the same image using tags. Here, for example, we build two different versions of the image; one of them is intended to run on a Linux environment, and the other is intended to run on a Windows environment. We distinguish them with the image tag (i.e., `image:tag`).*
+***Note:** It’s possible to create multiple versions of the same image using tags. Here, for example, we build two
+different versions of the image; one of them is intended to run on a Linux environment, and the other is intended to run
+on a Windows environment. We distinguish them with the image tag (i.e., `image:tag`).*
 
 ![server-monitoring-5.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/ddf5996a-820b-4471-852d-f26ee54b7580/80a0dcac-10e9-40e6-b315-9d43206a7bfc/server-monitoring-5.png)
