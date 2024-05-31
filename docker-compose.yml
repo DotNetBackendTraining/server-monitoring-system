@@ -10,6 +10,19 @@
     env_file:
       - .env
 
+  signalr-hub:
+    image: signalrhub
+    build:
+      context: ./ServerMonitoringSystem.SignalRHub
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_URLS=${ASPNETCORE_URLS}
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+    ports:
+      - "8080:80"
+    env_file:
+      - .env
+
   server-monitoring-system-collector:
     image: server-monitoring-system-collector
     build:
@@ -33,3 +46,11 @@
       dockerfile: Dockerfile
     depends_on:
       - rabbitmq
+      - signalr-hub
+    environment:
+      - RabbitMq__Hostname=${RabbitMq__Hostname}
+      - RabbitMq__Username=${RabbitMq__Username}
+      - RabbitMq__Password=${RabbitMq__Password}
+      - SignalRConfig__SignalRUrl=${SignalRConfig__SignalRUrl}
+    env_file:
+      - .env
