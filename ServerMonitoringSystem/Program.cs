@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Text.Json;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ServerMonitoringSystem.Configuration;
 using ServerMonitoringSystem.Interfaces;
@@ -11,11 +12,13 @@ var configuration = new ConfigurationBuilder()
 var services = new ServiceCollection();
 services.InjectConfigurationServices(configuration);
 services.InjectServerServices();
+services.InjectRabbitMqMessagingServices();
 var provider = services.BuildServiceProvider();
 
 var generator = provider.GetRequiredService<IServerStatisticsGenerator>();
 var clock = provider.GetRequiredService<IClockService>();
+var producer = provider.GetRequiredService<IMessageProducer>();
 
 await clock.StartAsync(
-    async () => Console.WriteLine(await generator.GenerateStatisticsAsync()),
+    async () => producer.SendMessage(JsonSerializer.Serialize(await generator.GenerateStatisticsAsync())),
     CancellationToken.None);
