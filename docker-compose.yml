@@ -25,3 +25,11 @@
       - RabbitMq__Password=${RabbitMq__Password}
     env_file:
       - .env
+
+  server-monitoring-system-analyzer:
+    image: server-monitoring-system-analyzer
+    build:
+      context: ./ServerMonitoringSystem.Analyzer
+      dockerfile: Dockerfile
+    depends_on:
+      - rabbitmq
