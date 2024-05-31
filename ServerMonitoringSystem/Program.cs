@@ -22,8 +22,8 @@ var serverIdentifier =
 
 Console.WriteLine($"Sampling Interval: {samplingIntervalSeconds} seconds");
 Console.WriteLine($"Server Identifier: {serverIdentifier}");
-
-var generator = new ServerStatisticsGenerator(cpuUsageSamplingMilliSeconds);
-var clock = new ClockService(TimeSpan.FromSeconds(samplingIntervalSeconds),
-    async () => Console.WriteLine(await generator.GenerateStatisticsAsync()));
-await clock.StartAsync(CancellationToken.None);
+var generator = new ServerStatisticsGenerator(settings.CpuUsageSamplingMilliSeconds);
+var clock = new ClockService(TimeSpan.FromSeconds(settings.SamplingIntervalSeconds));
+await clock.StartAsync(
+    async () => Console.WriteLine(await generator.GenerateStatisticsAsync()),
+    CancellationToken.None);

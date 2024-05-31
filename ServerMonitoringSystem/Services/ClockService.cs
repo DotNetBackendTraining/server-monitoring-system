@@ -6,20 +6,18 @@ namespace ServerMonitoringSystem.Services;
 public class ClockService : IClockService
 {
     private readonly TimeSpan _interval;
-    private readonly Func<Task> _action;
 
-    public ClockService(TimeSpan interval, Func<Task> action)
+    public ClockService(TimeSpan interval)
     {
         _interval = interval;
-        _action = action;
     }
 
-    public async Task StartAsync(CancellationToken cancellationToken)
+    public async Task StartAsync(Func<Task> action, CancellationToken cancellationToken)
     {
         while (!cancellationToken.IsCancellationRequested)
         {
             var stopwatch = Stopwatch.StartNew();
-            await _action();
+            await action();
             stopwatch.Stop();
 
             var elapsed = stopwatch.Elapsed;
