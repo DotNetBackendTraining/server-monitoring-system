@@ -6,6 +6,7 @@ using ServerMonitoringSystem.Collector.Interfaces;
 using ServerMonitoringSystem.Collector.Services;
 using ServerMonitoringSystem.Common.Interfaces;
 using ServerMonitoringSystem.Messaging.RabbitMq;
+using ServerMonitoringSystem.Messaging.RabbitMq.Configuration;
 
 namespace ServerMonitoringSystem.Collector.Configuration;
 
@@ -33,26 +34,14 @@ public static class ServicesConfigurationExtension
         });
     }
 
-    public static void InjectRabbitMqMessagingServices(this IServiceCollection services)
+    public static void InjectRabbitMqProducerServices(this IServiceCollection services)
     {
-        services.AddSingleton<IConnection>(p =>
-        {
-            var settings = p.GetRequiredService<IOptions<RabbitMqSettings>>().Value;
-            var factory = new ConnectionFactory
-            {
-                HostName = settings.Hostname,
-                UserName = settings.Username,
-                Password = settings.Password
-            };
-            return factory.CreateConnection();
-        });
-
-        services.AddTransient<IModel>(p => p.GetRequiredService<IConnection>().CreateModel());
+        services.InjectRabbitMqMessagingServices();
         services.AddTransient<IMessageProducer>(p =>
         {
-            var settings = p.GetRequiredService<IOptions<ServerStatisticsSettings>>().Value;
+            var statisticsSettings = p.GetRequiredService<IOptions<ServerStatisticsSettings>>().Value;
             var model = p.GetRequiredService<IModel>();
-            return new RabbitMqMessageProducer("ServerStatistics." + settings.ServerIdentifier, model);
+            return new RabbitMqMessageProducer("ServerStatistics." + statisticsSettings.ServerIdentifier, model);
         });
     }
 }

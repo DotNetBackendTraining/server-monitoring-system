@@ -1,4 +1,4 @@
-namespace ServerMonitoringSystem.Collector.Configuration;
+namespace ServerMonitoringSystem.Messaging.RabbitMq.Configuration;
 
 public class RabbitMqSettings
 {

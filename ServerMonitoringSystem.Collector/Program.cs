@@ -13,7 +13,7 @@ var configuration = new ConfigurationBuilder()
 var services = new ServiceCollection();
 services.InjectConfigurationServices(configuration);
 services.InjectServerServices();
-services.InjectRabbitMqMessagingServices();
+services.InjectRabbitMqProducerServices();
 var provider = services.BuildServiceProvider();
 
 var generator = provider.GetRequiredService<IServerStatisticsGenerator>();
