@@ -21,5 +21,10 @@ var clock = provider.GetRequiredService<IClockService>();
 var producer = provider.GetRequiredService<IMessageProducer>();
 
 await clock.StartAsync(
-    async () => producer.SendMessage(JsonSerializer.Serialize(await generator.GenerateStatisticsAsync())),
+    async () =>
+    {
+        var message = JsonSerializer.Serialize(await generator.GenerateStatisticsAsync());
+        Console.WriteLine(message);
+        producer.SendMessage(message);
+    },
     CancellationToken.None);
