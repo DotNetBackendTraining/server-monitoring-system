@@ -1,4 +1,4 @@
-namespace ServerMonitoringSystem.Models;
+namespace ServerMonitoringSystem.Collector.Models;
 
 public record ServerStatisticsData(
     double MemoryUsage,

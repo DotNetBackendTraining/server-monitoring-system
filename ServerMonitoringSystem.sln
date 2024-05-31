@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerMonitoringSystem", "ServerMonitoringSystem\ServerMonitoringSystem.csproj", "{5F6C9C6F-DBE0-49D8-BA39-9427497D2195}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerMonitoringSystem.Collector", "ServerMonitoringSystem.Collector\ServerMonitoringSystem.Collector.csproj", "{5F6C9C6F-DBE0-49D8-BA39-9427497D2195}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9F9C7259-ED7E-46B9-B887-3E39B44AF37B}"
 	ProjectSection(SolutionItems) = preProject

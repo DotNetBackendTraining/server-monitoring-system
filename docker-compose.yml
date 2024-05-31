@@ -10,10 +10,10 @@
     env_file:
       - .env
 
-  server-monitoring-system:
-    image: server-monitoring-system
+  server-monitoring-system-collector:
+    image: server-monitoring-system-collector
     build:
-      context: ./ServerMonitoringSystem
+      context: ./ServerMonitoringSystem.Collector
       dockerfile: Dockerfile
     depends_on:
       - rabbitmq

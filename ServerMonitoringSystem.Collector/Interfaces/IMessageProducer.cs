@@ -1,4 +1,4 @@
-namespace ServerMonitoringSystem.Interfaces;
+namespace ServerMonitoringSystem.Collector.Interfaces;
 
 public interface IMessageProducer
 {

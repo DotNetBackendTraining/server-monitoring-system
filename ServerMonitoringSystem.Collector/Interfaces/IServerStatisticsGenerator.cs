@@ -1,6 +1,6 @@
-using ServerMonitoringSystem.Models;
+using ServerMonitoringSystem.Collector.Models;
 
-namespace ServerMonitoringSystem.Interfaces;
+namespace ServerMonitoringSystem.Collector.Interfaces;
 
 public interface IServerStatisticsGenerator
 {

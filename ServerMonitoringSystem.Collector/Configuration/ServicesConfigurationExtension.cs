@@ -2,10 +2,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
-using ServerMonitoringSystem.Interfaces;
-using ServerMonitoringSystem.Services;
+using ServerMonitoringSystem.Collector.Interfaces;
+using ServerMonitoringSystem.Collector.Services;
 
-namespace ServerMonitoringSystem.Configuration;
+namespace ServerMonitoringSystem.Collector.Configuration;
 
 public static class ServicesConfigurationExtension
 {

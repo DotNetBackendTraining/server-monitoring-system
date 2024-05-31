@@ -1,7 +1,7 @@
 using System.Diagnostics;
-using ServerMonitoringSystem.Interfaces;
+using ServerMonitoringSystem.Collector.Interfaces;
 
-namespace ServerMonitoringSystem.Services;
+namespace ServerMonitoringSystem.Collector.Services;
 
 public class ClockService : IClockService
 {

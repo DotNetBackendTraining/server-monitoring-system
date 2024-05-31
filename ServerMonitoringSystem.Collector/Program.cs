@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ServerMonitoringSystem.Configuration;
-using ServerMonitoringSystem.Interfaces;
+using ServerMonitoringSystem.Collector.Configuration;
+using ServerMonitoringSystem.Collector.Interfaces;
 
 var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")

@@ -1,8 +1,8 @@
 using System.Text;
 using RabbitMQ.Client;
-using ServerMonitoringSystem.Interfaces;
+using ServerMonitoringSystem.Collector.Interfaces;
 
-namespace ServerMonitoringSystem.Services;
+namespace ServerMonitoringSystem.Collector.Services;
 
 public class RabbitMqMessageProducer : IMessageProducer, IDisposable
 {

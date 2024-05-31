@@ -1,8 +1,8 @@
 using System.Diagnostics;
-using ServerMonitoringSystem.Interfaces;
-using ServerMonitoringSystem.Models;
+using ServerMonitoringSystem.Collector.Interfaces;
+using ServerMonitoringSystem.Collector.Models;
 
-namespace ServerMonitoringSystem.Services;
+namespace ServerMonitoringSystem.Collector.Services;
 
 public class ServerStatisticsGenerator : IServerStatisticsGenerator
 {
