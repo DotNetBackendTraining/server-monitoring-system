@@ -5,6 +5,7 @@ using RabbitMQ.Client;
 using ServerMonitoringSystem.Collector.Interfaces;
 using ServerMonitoringSystem.Collector.Services;
 using ServerMonitoringSystem.Common.Interfaces;
+using ServerMonitoringSystem.Messaging.RabbitMq;
 
 namespace ServerMonitoringSystem.Collector.Configuration;
 

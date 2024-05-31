@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerMonitoringSystem.Anal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerMonitoringSystem.Common", "ServerMonitoringSystem.Common\ServerMonitoringSystem.Common.csproj", "{4D5EBA44-4614-4B20-9681-D30319CBF912}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerMonitoringSystem.Messaging.RabbitMq", "ServerMonitoringSystem.Messaging.RabbitMq\ServerMonitoringSystem.Messaging.RabbitMq.csproj", "{87CE8F68-F37C-4644-8BC5-6E1A52ECA811}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,5 +31,9 @@ Global
 		{4D5EBA44-4614-4B20-9681-D30319CBF912}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D5EBA44-4614-4B20-9681-D30319CBF912}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D5EBA44-4614-4B20-9681-D30319CBF912}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87CE8F68-F37C-4644-8BC5-6E1A52ECA811}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87CE8F68-F37C-4644-8BC5-6E1A52ECA811}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87CE8F68-F37C-4644-8BC5-6E1A52ECA811}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87CE8F68-F37C-4644-8BC5-6E1A52ECA811}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
