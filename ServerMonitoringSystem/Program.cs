@@ -1,29 +1,20 @@
 ﻿using Microsoft.Extensions.Configuration;
-using ServerMonitoringSystem.Services;
+using Microsoft.Extensions.DependencyInjection;
+using ServerMonitoringSystem.Configuration;
+using ServerMonitoringSystem.Interfaces;
 
-var builder = new ConfigurationBuilder()
+var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
-    .AddEnvironmentVariables();
+    .AddEnvironmentVariables()
+    .Build();
 
-var configuration = builder.Build();
-var serverStatisticsConfig = configuration.GetSection("ServerStatisticsSettings");
+var services = new ServiceCollection();
+services.InjectServerServices(configuration.GetSection("ServerStatisticsSettings"));
+var provider = services.BuildServiceProvider();
 
-var samplingIntervalSeconds = double.Parse(
-    serverStatisticsConfig["SamplingIntervalSeconds"]
-    ?? throw new IOException("SamplingIntervalSeconds not defined"));
+var generator = provider.GetRequiredService<IServerStatisticsGenerator>();
+var clock = provider.GetRequiredService<IClockService>();
 
-var cpuUsageSamplingMilliSeconds = int.Parse(
-    serverStatisticsConfig["CpuUsageSamplingMilliSeconds"]
-    ?? throw new IOException("CpuUsageSamplingMilliSeconds not defined"));
-
-var serverIdentifier =
-    serverStatisticsConfig["ServerIdentifier"]
-    ?? throw new IOException("ServerIdentifier not defined");
-
-Console.WriteLine($"Sampling Interval: {samplingIntervalSeconds} seconds");
-Console.WriteLine($"Server Identifier: {serverIdentifier}");
-var generator = new ServerStatisticsGenerator(settings.CpuUsageSamplingMilliSeconds);
-var clock = new ClockService(TimeSpan.FromSeconds(settings.SamplingIntervalSeconds));
 await clock.StartAsync(
     async () => Console.WriteLine(await generator.GenerateStatisticsAsync()),
     CancellationToken.None);
