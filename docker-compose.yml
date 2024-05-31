@@ -10,6 +10,16 @@
     env_file:
       - .env
 
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    env_file:
+      - .env
+
   signalr-hub:
     image: signalrhub
     build:
@@ -46,11 +56,13 @@
       dockerfile: Dockerfile
     depends_on:
       - rabbitmq
+      - mongodb
       - signalr-hub
     environment:
       - RabbitMq__Hostname=${RabbitMq__Hostname}
       - RabbitMq__Username=${RabbitMq__Username}
       - RabbitMq__Password=${RabbitMq__Password}
+      - MongoDbSettings__ConnectionString=${MongoDbSettings__ConnectionString}
       - SignalRConfig__SignalRUrl=${SignalRConfig__SignalRUrl}
     env_file:
       - .env
