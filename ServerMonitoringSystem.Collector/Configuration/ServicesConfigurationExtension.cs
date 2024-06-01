@@ -40,8 +40,13 @@ public static class ServicesConfigurationExtension
         services.AddTransient<IMessageProducer>(p =>
         {
             var statisticsSettings = p.GetRequiredService<IOptions<ServerStatisticsSettings>>().Value;
+            var producerSettings = new RabbitMqProducerSettings
+            {
+                ExchangeName = "ServerStatisticsExchange",
+                RoutingKey = $"ServerStatistics.{statisticsSettings.ServerIdentifier}"
+            };
             var model = p.GetRequiredService<IModel>();
-            return new RabbitMqMessageProducer("ServerStatistics." + statisticsSettings.ServerIdentifier, model);
+            return new RabbitMqMessageProducer(producerSettings, model);
         });
     }
 }
