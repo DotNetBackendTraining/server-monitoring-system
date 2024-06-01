@@ -63,6 +63,6 @@
       - RabbitMq__Username=${RabbitMq__Username}
       - RabbitMq__Password=${RabbitMq__Password}
       - MongoDbSettings__ConnectionString=${MongoDbSettings__ConnectionString}
-      - SignalRConfig__SignalRUrl=${SignalRConfig__SignalRUrl}
+      - SignalRSettings__SignalRUrl=${SignalRSettings__SignalRUrl}
     env_file:
       - .env
