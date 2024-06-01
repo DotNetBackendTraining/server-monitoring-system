@@ -16,5 +16,23 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.6" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
     </ItemGroup>
+
+
+    <ItemGroup>
+      <None Update="appsettings.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <ProjectReference Include="..\ServerMonitoringSystem.Common\ServerMonitoringSystem.Common.csproj" />
+      <ProjectReference Include="..\ServerMonitoringSystem.Messaging.RabbitMq\ServerMonitoringSystem.Messaging.RabbitMq.csproj" />
+    </ItemGroup>
+
 </Project>

@@ -1,3 +1,17 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using ServerMonitoringSystem.Analyzer.Configuration;
+using ServerMonitoringSystem.Analyzer.Interfaces;
 
-Console.WriteLine("Hello, World!");
+var configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .AddEnvironmentVariables()
+    .Build();
+
+var services = new ServiceCollection();
+services.InjectConfigurationServices(configuration);
+services.InjectSignalRAlerterServices();
+var provider = services.BuildServiceProvider();
+
+var alerter = provider.GetRequiredService<IAlertSender>();
+await alerter.SendAlertAsync("Example alert");
