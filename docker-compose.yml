@@ -8,7 +8,7 @@
       RABBITMQ_DEFAULT_USER: ${RabbitMq__Username}
       RABBITMQ_DEFAULT_PASS: ${RabbitMq__Password}
     healthcheck:
-      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
+      test: [ "CMD-SHELL", "rabbitmq-diagnostics -q ping" ]
       interval: 10s
       timeout: 10s
       retries: 3
@@ -20,8 +20,8 @@
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_ROOT_USERNAME: ${MongoDb__Username}
+      MONGO_INITDB_ROOT_PASSWORD: ${MongoDb__Password}
     env_file:
       - .env
 
