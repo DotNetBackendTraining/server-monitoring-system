@@ -7,6 +7,11 @@
     environment:
       RABBITMQ_DEFAULT_USER: ${RabbitMq__Username}
       RABBITMQ_DEFAULT_PASS: ${RabbitMq__Password}
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
     env_file:
       - .env
 
@@ -39,7 +44,8 @@
       context: ./ServerMonitoringSystem.Collector
       dockerfile: Dockerfile
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     environment:
       - ServerStatisticsSettings__SamplingIntervalSeconds=${ServerStatisticsSettings__SamplingIntervalSeconds}
       - ServerStatisticsSettings__ServerIdentifier=${ServerStatisticsSettings__ServerIdentifier}
@@ -55,7 +61,7 @@
       context: ./ServerMonitoringSystem.Analyzer
       dockerfile: Dockerfile
     depends_on:
-      - rabbitmq
+      - server-monitoring-system-collector
       - mongodb
       - signalr-hub
     environment:
