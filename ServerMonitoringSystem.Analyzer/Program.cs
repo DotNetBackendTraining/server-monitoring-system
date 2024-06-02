@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using ServerMonitoringSystem.Analyzer.Configuration;
 using ServerMonitoringSystem.Analyzer.Interfaces;
-using ServerMonitoringSystem.Common.Interfaces;
 
 var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
@@ -11,17 +10,13 @@ var configuration = new ConfigurationBuilder()
 
 var services = new ServiceCollection();
 services.InjectConfigurationServices(configuration);
+services.InjectServerServices();
 services.InjectSignalRAlerterServices();
 services.InjectRabbitMqConsumerServices();
 services.InjectMongoDbPersistenceServices();
 var provider = services.BuildServiceProvider();
 
-var alerter = provider.GetRequiredService<IAlertSender>();
-await alerter.SendAlertAsync("Example alert");
-
-var consumer = provider.GetRequiredService<IMessageConsumer>();
 var cts = new CancellationTokenSource();
-
 AppDomain.CurrentDomain.ProcessExit += (s, e) =>
 {
     Console.WriteLine("Process exiting...");
@@ -35,11 +30,14 @@ Console.CancelKeyPress += (_, e) =>
     e.Cancel = true;
 };
 
-consumer.StartConsuming(async message =>
-{
-    Console.WriteLine(message);
-    await Task.CompletedTask;
-}, cts.Token);
+var alerter = provider.GetRequiredService<IAlertSender>();
+var storage = provider.GetRequiredService<IPersistenceService>();
+var processor = provider.GetRequiredService<IServerStatisticsProcessor>();
+
+processor.StartProcessing(
+    async statisticsData => await storage.SaveServerStatisticsAsync(statisticsData),
+    async alertMessage => await alerter.SendAlertAsync(alertMessage),
+    cts.Token);
 
 Console.WriteLine("Connection successful");
 Console.WriteLine("Press [Enter] to exit.");

@@ -24,6 +24,16 @@ public static class ServicesConfigurationExtension
         services.Configure<MongoDbSettings>(configuration.GetSection("MongoDbSettings"));
     }
 
+    public static void InjectServerServices(this IServiceCollection services)
+    {
+        services.AddScoped<IAnomalyDetectorService>(p =>
+        {
+            var settings = p.GetRequiredService<IOptions<AnomalyDetectionSettings>>().Value;
+            return new AnomalyDetectorService(settings);
+        });
+        services.AddScoped<IServerStatisticsProcessor, ServerStatisticsProcessor>();
+    }
+
     public static void InjectSignalRAlerterServices(this IServiceCollection services)
     {
         services.AddSingleton<HubConnection>(p =>
