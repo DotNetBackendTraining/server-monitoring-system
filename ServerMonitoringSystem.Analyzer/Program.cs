@@ -13,6 +13,7 @@ var services = new ServiceCollection();
 services.InjectConfigurationServices(configuration);
 services.InjectSignalRAlerterServices();
 services.InjectRabbitMqConsumerServices();
+services.InjectMongoDbPersistenceServices();
 var provider = services.BuildServiceProvider();
 
 var alerter = provider.GetRequiredService<IAlertSender>();

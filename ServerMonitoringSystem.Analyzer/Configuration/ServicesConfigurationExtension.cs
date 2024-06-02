@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using RabbitMQ.Client;
 using ServerMonitoringSystem.Analyzer.Interfaces;
 using ServerMonitoringSystem.Analyzer.Services;
@@ -20,6 +21,7 @@ public static class ServicesConfigurationExtension
         services.Configure<AnomalyDetectionSettings>(configuration.GetSection("AnomalyDetectionSettings"));
         services.Configure<SignalRSettings>(configuration.GetSection("SignalRSettings"));
         services.Configure<RabbitMqSettings>(configuration.GetSection("RabbitMq"));
+        services.Configure<MongoDbSettings>(configuration.GetSection("MongoDbSettings"));
     }
 
     public static void InjectSignalRAlerterServices(this IServiceCollection services)
@@ -51,6 +53,22 @@ public static class ServicesConfigurationExtension
                 RoutingKey = "ServerStatistics.#"
             };
             return new RabbitMqMessageConsumer(settings, model);
+        });
+    }
+
+    public static void InjectMongoDbPersistenceServices(this IServiceCollection services)
+    {
+        services.AddSingleton<IMongoClient>(sp =>
+        {
+            var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+            return new MongoClient(settings.ConnectionString);
+        });
+
+        services.AddSingleton<IPersistenceService, MongoDbPersistenceService>(sp =>
+        {
+            var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+            var mongoClient = sp.GetRequiredService<IMongoClient>();
+            return new MongoDbPersistenceService(mongoClient, settings.ConnectionString, "ServerStatistics");
         });
     }
 }
