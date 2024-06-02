@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerMonitoringSystem.Mess
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerMonitoringSystem.SignalRHub", "ServerMonitoringSystem.SignalRHub\ServerMonitoringSystem.SignalRHub.csproj", "{7F1E18CD-7067-41EE-8DEB-88D4B7847688}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerMonitoringSystem.SignalREventConsumer", "ServerMonitoringSystem.SignalREventConsumer\ServerMonitoringSystem.SignalREventConsumer.csproj", "{2950AE44-23EF-4A17-954E-31A9F401CF4E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,5 +43,9 @@ Global
 		{7F1E18CD-7067-41EE-8DEB-88D4B7847688}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F1E18CD-7067-41EE-8DEB-88D4B7847688}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F1E18CD-7067-41EE-8DEB-88D4B7847688}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2950AE44-23EF-4A17-954E-31A9F401CF4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2950AE44-23EF-4A17-954E-31A9F401CF4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2950AE44-23EF-4A17-954E-31A9F401CF4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2950AE44-23EF-4A17-954E-31A9F401CF4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

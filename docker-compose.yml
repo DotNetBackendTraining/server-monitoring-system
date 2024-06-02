@@ -72,3 +72,15 @@
       - SignalRSettings__SignalRUrl=${SignalRSettings__SignalRUrl}
     env_file:
       - .env
+
+  signalr-event-consumer:
+    image: signalr-event-consumer
+    build:
+      context: ./ServerMonitoringSystem.SignalREventConsumer
+      dockerfile: Dockerfile
+    depends_on:
+      - signalr-hub
+    environment:
+      - SignalRSettings__SignalRUrl=${SignalRSettings__SignalRUrl}
+    env_file:
+      - .env
