@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ServerMonitoringSystem.Analyzer.Common;
 using ServerMonitoringSystem.Analyzer.Configuration;
 using ServerMonitoringSystem.Analyzer.Interfaces;
 
@@ -35,8 +36,17 @@ var storage = provider.GetRequiredService<IPersistenceService>();
 var processor = provider.GetRequiredService<IServerStatisticsProcessor>();
 
 processor.StartProcessing(
-    async statisticsData => await storage.SaveServerStatisticsAsync(statisticsData),
-    async alertMessage => await alerter.SendAlertAsync(alertMessage),
+    async statisticsData =>
+    {
+        Console.WriteLine(statisticsData);
+        await storage.SaveServerStatisticsAsync(statisticsData);
+    },
+    async anomalyType =>
+    {
+        var message = $"One or more anomalies detected: {anomalyType.ToFriendlyString()}";
+        Console.WriteLine(message);
+        await alerter.SendAlertAsync(message);
+    },
     cts.Token);
 
 Console.WriteLine("Connection successful");

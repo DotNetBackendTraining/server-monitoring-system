@@ -1,3 +1,4 @@
+using ServerMonitoringSystem.Analyzer.Common;
 using ServerMonitoringSystem.Analyzer.Configuration;
 using ServerMonitoringSystem.Analyzer.Interfaces;
 using ServerMonitoringSystem.Common.Models;
@@ -14,7 +15,26 @@ public class AnomalyDetectorService : IAnomalyDetectorService
         _settings = settings;
     }
 
-    public bool CheckForMemoryAnomaly(ServerStatisticsData current)
+    public AnomalyType CheckForAnomaly(ServerStatisticsData current)
+    {
+        var result = AnomalyType.None;
+
+        if (CheckForMemoryAnomaly(current))
+            result |= AnomalyType.Memory;
+
+        if (CheckForCpuAnomaly(current))
+            result |= AnomalyType.Cpu;
+
+        if (CheckForHighMemoryUsage(current))
+            result |= AnomalyType.HighMemoryUsage;
+
+        if (CheckForHighCpuUsage(current))
+            result |= AnomalyType.HighCpuUsage;
+
+        return result;
+    }
+
+    private bool CheckForMemoryAnomaly(ServerStatisticsData current)
     {
         if (_previousStatistics == null) return false;
 
@@ -25,7 +45,7 @@ public class AnomalyDetectorService : IAnomalyDetectorService
         return isAnomaly;
     }
 
-    public bool CheckForCpuAnomaly(ServerStatisticsData current)
+    private bool CheckForCpuAnomaly(ServerStatisticsData current)
     {
         if (_previousStatistics == null) return false;
 
@@ -36,7 +56,7 @@ public class AnomalyDetectorService : IAnomalyDetectorService
         return isAnomaly;
     }
 
-    public bool CheckForHighMemoryUsage(ServerStatisticsData current)
+    private bool CheckForHighMemoryUsage(ServerStatisticsData current)
     {
         if (current is { MemoryUsage: 0, AvailableMemory: 0 }) return false;
 
@@ -45,7 +65,7 @@ public class AnomalyDetectorService : IAnomalyDetectorService
         return isHighUsage;
     }
 
-    public bool CheckForHighCpuUsage(ServerStatisticsData current)
+    private bool CheckForHighCpuUsage(ServerStatisticsData current)
     {
         var isHighUsage = current.CpuUsage > _settings.CpuUsageThresholdPercentage;
         return isHighUsage;

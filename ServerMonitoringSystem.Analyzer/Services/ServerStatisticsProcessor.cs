@@ -1,4 +1,5 @@
 using System.Text.Json;
+using ServerMonitoringSystem.Analyzer.Common;
 using ServerMonitoringSystem.Analyzer.Interfaces;
 using ServerMonitoringSystem.Common.Interfaces;
 using ServerMonitoringSystem.Common.Models;
@@ -20,7 +21,7 @@ public class ServerStatisticsProcessor : IServerStatisticsProcessor
 
     public void StartProcessing(
         Func<ServerStatisticsData, Task> onSaveStatistics,
-        Func<string, Task> onAlert,
+        Func<AnomalyType, Task> onAlert,
         CancellationToken cancellationToken)
     {
         _messageConsumer.StartConsuming(async message =>
@@ -28,24 +29,10 @@ public class ServerStatisticsProcessor : IServerStatisticsProcessor
             var statistics = Deserialize(message);
             await onSaveStatistics(statistics);
 
-            if (_anomalyDetectorService.CheckForMemoryAnomaly(statistics))
+            var anomaly = _anomalyDetectorService.CheckForAnomaly(statistics);
+            if (anomaly != AnomalyType.None)
             {
-                await onAlert("Memory anomaly detected.");
-            }
-
-            if (_anomalyDetectorService.CheckForCpuAnomaly(statistics))
-            {
-                await onAlert("CPU anomaly detected.");
-            }
-
-            if (_anomalyDetectorService.CheckForHighMemoryUsage(statistics))
-            {
-                await onAlert("High memory usage detected.");
-            }
-
-            if (_anomalyDetectorService.CheckForHighCpuUsage(statistics))
-            {
-                await onAlert("High CPU usage detected.");
+                await onAlert(anomaly);
             }
         }, cancellationToken);
     }
